@@ -483,13 +483,13 @@ impl Core {
         )
         .await?;
 
-        if self.pes_path {
-            let message =
-                ConsensusMessage::DelayProPose(self.epoch, self.height, self.high_qc.clone());
-            if let Err(e) = self.tx_smvba.send(message).await {
-                warn!("Failed to send block through the smvba channel: {}", e);
-            }
-        }
+        // if self.pes_path {
+        //     let message =
+        //         ConsensusMessage::DelayProPose(self.epoch, self.height, self.high_qc.clone());
+        //     if let Err(e) = self.tx_smvba.send(message).await {
+        //         warn!("Failed to send block through the smvba channel: {}", e);
+        //     }
+        // }
         self.process_opt_block(&block).await?;
         // Wait for the minimum block delay.
         sleep(Duration::from_millis(self.parameters.min_block_delay)).await;
@@ -532,6 +532,14 @@ impl Core {
     #[async_recursion]
     async fn process_opt_block(&mut self, block: &Block) -> ConsensusResult<()> {
         debug!("Processing OPT Block {:?}", block);
+
+        if self.pes_path {
+            let message =
+                ConsensusMessage::DelayProPose(block.epoch, block.height, block.qc.clone());
+            if let Err(e) = self.tx_smvba.send(message).await {
+                warn!("Failed to send block through the smvba channel: {}", e);
+            }
+        }
 
         // Let's see if we have the last three ancestors of the block, that is:
         //      b0 <- |qc0; b1| <- |qc1; block|
@@ -1848,6 +1856,15 @@ impl Core {
             self.broadcast_opt_propose(block)
                 .await
                 .expect("Failed to send the first OPT block");
+        }
+
+        //如果启动了悲观路劲
+        if self.pes_path {
+            let message =
+                ConsensusMessage::DelayProPose(self.epoch, self.height, self.high_qc.clone());
+            if let Err(e) = self.tx_smvba.send(message).await {
+                warn!("Failed to send block through the smvba channel: {}", e);
+            }
         }
 
         // This is the main loop: it processes incoming blocks and votes,

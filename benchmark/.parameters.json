@@ -1,0 +1,21 @@
+{
+    "consensus": {
+        "ddos": true,
+        "exp": 0,
+        "max_payload_size": 500,
+        "min_block_delay": 0,
+        "network_delay": 20000,
+        "node_sync_delay": 500,
+        "random_ddos": false,
+        "random_ddos_chance": 5,
+        "sync_retry_delay": 10000,
+        "timeout_delay": 0
+    },
+    "mempool": {
+        "max_payload_size": 15000,
+        "min_block_delay": 0,
+        "queue_capacity": 10000,
+        "sync_retry_delay": 100000
+    },
+    "protocol": 2
+}
