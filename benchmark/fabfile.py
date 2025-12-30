@@ -25,8 +25,8 @@ def local(ctx):
             'sync_retry_delay': 10_000,
             'max_payload_size': 500,
             'min_block_delay': 0,
-            'network_delay': 20000, # message delay on the leaders' proposals during DDoS
-            'ddos': True, # True for DDoS attack on the leader, False otherwise
+            'network_delay': 20_000, # message delay on the leaders' proposals during DDoS
+            'ddos': False, # True for DDoS attack on the leader, False otherwise
             'random_ddos': False,
             'random_ddos_chance': 5,
             'exp': 0 # multiplicative factor for exponential fallback
